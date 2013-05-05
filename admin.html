@@ -1,0 +1,70 @@
+{% import 'macros.html' as macros %}
+<!doctype html>
+<head>
+  <title> Blog Posts </title>
+  {{ macros.stylesheet(home=True, jquery=True) }}
+  <style>
+  .login { margin: auto; text-align: center; }
+  </style>
+</head>
+
+<body>
+  <script>
+  var toUpdate = [];
+  function update(pid, title) {
+    var url = '/update?id=' + pid;
+   // window.location.host + '/update?id=' + pid;
+    $.get(url, function(){
+      $('#f' + pid).html(title + ' [updated]');
+    });
+  }
+  function publish(pid) {
+    console.log(pid);
+    $.post(
+      '/publish?id=' + pid,
+      function(){ $('#p' + pid + ' > span').addClass('published'); }
+    );
+    window.location.reload(true);
+    return false;
+  }
+  </script>
+  {% if logged_in %}
+ 
+  <div class="page">
+  {{ macros.create_header(page='admin', logged_in=True) }}
+  <div class="files"><h4 class="underline">Updating</h4>
+  {% for file in toupdate %}
+    <div id="f{{file.id}}">{{file.title}}</div>
+    <script>toUpdate.push(['{{file.id}}', '{{file.title}}']);</script>
+  {% endfor %}
+  </div>
+
+  <div id="posts"><h4 class="underline">Unpublished</h4>
+  {% for post in unpublished %}
+    <div id='p{{post.postid}}' class='file'>
+      <span>{{post.title}}</span>
+      <a href="/post/{{post.small_date}}/{{post.small_name}}">view</a>
+      <a href="javascript:publish('{{post.postid}}');">publish</a>
+    </div>
+  {% endfor %}
+  </div>
+
+  <h4 class="underline">Published</h4>
+  {% for post in published %}
+    <div class="post">
+      <div style="background-image:url({{post.pic}})" class="mainimg">&nbsp;</div>
+      <a href="/post/{{post.small_date}}/{{post.small_name}}" class="title">{{post.title}}</a>
+      <div class="snippet">Posted {{post.nice_date}}<br />{{post.snippet}}</div>
+    </div>
+  {% endfor %}
+  <script>for(i in toUpdate){ update.apply(undefined, toUpdate[i]); }</script>
+  </div>
+  
+  {% else %}
+  <div class='login'>
+  <h3>rm -rf /</h3>
+  <a style='margin:auto;' href="{{url}}" class="btn">Admin Login</a>
+  </div>
+  {% endif %}
+ 
+</body>

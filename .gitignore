@@ -1,0 +1,3 @@
+*.py[cod]
+client_secrets.json
+!.gitignore
