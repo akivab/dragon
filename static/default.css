@@ -1,0 +1,7 @@
+table, td, tr, tbody { border-collapse:collapse; border: 0; border-spacing:0 }
+table { margin: auto; margin-top: 15px; margin-bottom:15px; }
+.special_table { margin: 0; }
+li, td, em, p, div { font-family: 'Open Sans', 'sans-serif'; }
+h1, h2, h3, h4, h5 { font-family: 'Arvo', 'sans-serif'; font-weight:normal; }
+pre, code { font-family: 'Ubuntu Mono', 'monospace'; display: inline-block; }
+.mainimg { display: none; }
