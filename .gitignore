@@ -2,5 +2,4 @@
 client_secrets.json
 *.swp
 *~
-blogsetup.py
 !.gitignore
