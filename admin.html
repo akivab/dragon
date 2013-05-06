@@ -22,9 +22,11 @@
     console.log(pid);
     $.post(
       '/publish?id=' + pid,
-      function(){ $('#p' + pid + ' > span').addClass('published'); }
+      function(){
+        $('#p' + pid + ' > span').addClass('published');
+        setTimeout(function(){ window.location.reload(true); }, 1000);
+      }
     );
-    window.location.reload(true);
     return false;
   }
   </script>

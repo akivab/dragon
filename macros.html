@@ -25,8 +25,9 @@
 <link rel="stylesheet" href="/r/blog.css" type="text/css" />
 <style>
   table, td, tr, tbody { border-collapse:collapse; border: 0; border-spacing:0 }
-  table { margin: 10px 0 10px; }
-  .page { left: 200px; position: absolute; padding-right:15px;  max-width: 760px; }
+  table { margin: auto; margin-top: 15px; margin-bottom:15px; }
+  .special_table { margin: 0; }
+  .page { left: 200px; position: absolute; padding-right:15px; min-width: 300px; max-width: 760px; }
   .page.scrunched{ left: 15px; }
   li, td, em, p, div { font-family: 'Open Sans', 'sans-serif'; }
   h1, h2, h3, h4, h5 { font-family: 'Arvo', 'sans-serif'; font-weight:normal; }
@@ -48,24 +49,34 @@
   .post > .mainimg { float:left;  }
   .post { min-width: 600px; border-bottom: 1px solid #999; padding: 15px 0 15px 0; min-height: 120px }
   .navmenu { position: absolute; left: -175px; height: 100%; width: 120px; }
-  .navmenu.scrunched { left: 15px; top: 15px; }
-  .navmenu > a { display: inline-block; margin-top:20px; padding: 5px; text-decoration:none; min-width: 100px; text-align: center; }
+  .navmenu.scrunched { left: 10px; top: 10px; height:120px; min-width:400px; }
+  .navmenu > a { display: inline-block; margin-top:20px; padding: 5px; text-decoration:none; text-align: center; min-width:100px;}
+  .scrunched > a { min-width: 0; }
   .scrunched > .content { margin-top: 120px; }
-  .scrunched > .navmenu { left: 10px; top:10px; width:100%; }
 </style>
+
 {% if jquery %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 {% endif %}
 {%- endmacro %}
 
-{% macro create_header(page='home', post=None, nextUrl=None, prevUrl=None, logged_in=False, is_main_link=False) -%}
+{% macro create_header(page='home',
+    post=None,
+    nextUrl=None,
+    prevUrl=None,
+    logged_in=False,
+    is_main_link=False,
+    mainimg=None,
+    maintitle=None,
+    mainsnippet=None
+    ) -%}
 <div class="header">
 {% if page == 'admin' %}
 <a href="/">home</a>
 <div class='title'>Manage Posts</div>
 {% else %}
 <div class="navmenu">
-<div onclick="window.location.href='/'" class='mainimg glow' style='{% if page=='home' %}background-size:120px;{% endif %}background-image:url({% if page=='post' %}{{post.pic}}{% else %}/r/images/me.jpg{% endif %})'>&nbsp;</div>
+<div onclick="window.location.href='/'" class='mainimg glow' style='{% if page=='home' %}background-size:120px;{% endif %}background-image:url({% if page=='post' %}{{post.pic}}{% else %}{{mainimg}}{% endif %})'>&nbsp;</div>
 <a href="/">home</a>
 <a href="/post/about">about</a>
 {% if is_main_link %}
@@ -85,24 +96,21 @@
 <div class="content">&nbsp;</div>
 {% if not is_main_link %}
 <div class='{% if page=='home' %}home {% endif %}title'>
-{% if page=='post' %}{{post.title}}{% else %}rm -rf /{% endif %}
+{% if page=='post' %}{{post.title}}{% else %}{{maintitle}}{% endif %}
 </div>
 <div class='{% if page=='home' %}home {% endif %}snippet'>
-{% if page=='post' %}{{post.snippet}}{% else %}thoughts and projects by akiva{% endif %}
+{% if page=='post' %}{{post.snippet}}{% else %}{{mainsnippet}}{% endif %}
 </div>
 {% endif %}
 {% endif %}
 </div>
 <script>
 function resize(){ 
+  var sections = ['.header', '.page', '.navmenu'];
   if ($(window).width() < 800) {
-    $('.header').addClass('scrunched');
-    $('.page').addClass('scrunched');
-    $('.navmenu').addClass('scrunched');
+    $.each(sections, function(i,o) { $(o).addClass('scrunched'); });
   } else {
-    $('.page').removeClass('scrunched');
-    $('.header').removeClass('scrunched');
-    $('.navmenu').removeClass('scrunched');
+    $.each(sections, function(i,o) { $(o).removeClass('scrunched'); });
   }
 }
   
@@ -110,12 +118,16 @@ $(window).ready(resize).resize(resize);
 </script>
 {%- endmacro %}
 
-{% macro add_footer(no_comments=False) -%}
+{% macro add_footer(no_comments=False,
+    disqus_id=None,
+    gae_id=None,
+    gae_site=None
+    ) -%}
  {% if not no_comments %}
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'rmrf'; // required: replace example with your forum shortname
+        var disqus_shortname = '{{disqus_id}}'; // required: replace example with your forum shortname
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {
@@ -133,7 +145,7 @@ $(window).ready(resize).resize(resize);
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-40663280-1', 'rm-rfslash.appspot.com');
+  ga('create', '{{gae_id}}', '{{gae_site}}');
   ga('send', 'pageview');
 
 </script>
