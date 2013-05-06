@@ -259,7 +259,7 @@ class BlogHandler(webapp.RequestHandler):
     return
   def post(self, *args):
     fileId = self.request.get('id')
-    editMode = visible = code = pic = snippet = None
+    editMode = visible = created = code = pic = snippet = None
     if self.request.path == '/edit':
       code = self.request.get('code')
       pic = self.request.get('pic')
