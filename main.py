@@ -140,7 +140,6 @@ class UpdateHandler(webapp.RequestHandler):
     items = None
     try:
       query = "'%s' in parents" % blogsetup.BLOG_FOLDER_ID
-      # Get all files in Blog folder
       req = service.files().list(q=query)
       files = req.execute(http)
       items = files['items']
@@ -259,6 +258,10 @@ class BlogHandler(webapp.RequestHandler):
     return
   def post(self, *args):
     fileId = self.request.get('id')
+    post = Posts.getPostById(fileId)
+    if not post or not IsLoggedIn(users.get_current_user()):
+      self.error(404)
+      return
     editMode = visible = created = code = pic = snippet = None
     if self.request.path == '/edit':
       code = self.request.get('code')
@@ -268,12 +271,6 @@ class BlogHandler(webapp.RequestHandler):
     elif self.request.path == '/publish':
       visible = True
       created = datetime.datetime.now()
-    user = users.get_current_user()
-    post = Posts.getPostById(fileId)
-    logging.info('publishing %s %s' % (fileId, post.title))
-    if not post or not IsLoggedIn(user):
-      self.error(404)
-      return
     if visible is not None: post.visible = visible 
     if code: post.code = code 
     if pic: post.pic = pic 
