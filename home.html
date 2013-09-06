@@ -7,7 +7,7 @@
 
 <body>
   <div class="page">
-  {{ macros.create_header(logged_in=logged_in, mainimg=mainimg, mainsnippet=mainsnippet, maintitle=maintitle) }}
+  {{ macros.create_header(logged_in=logged_in, mainimg=mainimg, mainsnippet=mainsnippet, maintitle=maintitle, edit_mode=edit_mode) }}
   {% for post in published %}
     {% if edit_mode %}
       {{ macros.edit_mode(post) }}

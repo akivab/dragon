@@ -1,0 +1,61 @@
+{% import 'macros.html' as m %}
+{{ m.stylesheet() }}
+<style>
+  #main_form { text-align: center; }
+  .unfilled::-webkit-input-placeholder { color: rgba(256,0,0,0.8); }
+</style>
+
+<script>
+var DRIVE_PREFIX = "https://drive.google.com/#folders/";
+</script>
+<div id="main_form">
+<h3>Create blog</h3>
+<div><select id='title_selector'>
+<script>var options = {}; var currentOption = "";</script>
+{% for i in posts %}
+ <script>
+   currentOption = currentOption || '{{i.title}}';
+   options['{{i.title}}'] = '{{i.id}}';
+ </script>
+ <option>{{ i.title }}</option>
+{% endfor %}
+</select>
+<a id="view" href="#">view</a>
+</div>
+<form id='form' action='{{host}}/create' method='post' onsubmit='return checkOk()'>
+  <input placeholder="Title" type='text' id='title' name='title' /><br>
+  <input placeholder="Subdomain" type='text' id='subdomain' name='subdomain' /><br/>
+  <textarea placeholder="Blog snippet" id='snippet' name='snippet'></textarea><br/>
+  <input placeholder="Image URL" type='text' id='image' name='image' /><br/>
+  <input type='hidden' id='folder' name='folder' />
+<input type='submit'/>
+</div>
+</form>
+
+<script>
+function setViewUrl() {
+  $("#view").attr('href', DRIVE_PREFIX + options[currentOption]);
+  $("#folder").attr('value', options[currentOption]);
+}
+
+$('#title_selector').change(function(){
+    currentOption = this.value;
+    setViewUrl();
+});
+
+function checkOk() {
+  var ok = true;
+  $('#form').children().each(function(){
+    if (this.value === '' && this.type !== 'submit') {
+      $(this).addClass('unfilled');
+      ok = false;
+    }
+  });
+  console.log(ok);
+  return ok;
+}
+
+$(document).ready(function(){
+    setViewUrl();
+});
+</script>

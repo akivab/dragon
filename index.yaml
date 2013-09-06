@@ -12,6 +12,12 @@ indexes:
 
 - kind: Posts
   properties:
+  - name: blog
+  - name: created
+    direction: desc
+
+- kind: Posts
+  properties:
   - name: postid
   - name: created
     direction: desc

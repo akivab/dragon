@@ -19,11 +19,20 @@
     });
   }
   function publish(pid) {
-    console.log(pid);
     $.post(
       '/publish?id=' + pid,
       function(){
         $('#p' + pid + ' > span').addClass('published');
+        setTimeout(function(){ window.location.reload(true); }, 1000);
+      }
+    );
+    return false;
+  }
+  function unpublish(pid) {
+    $.post(
+      '/unpublish?id=' + pid,
+      function(){
+        $('#p' + pid + ' > span').removeClass('published');
         setTimeout(function(){ window.location.reload(true); }, 1000);
       }
     );
@@ -56,15 +65,16 @@
     <div class="post">
       <div style="background-image:url({{post.pic}})" class="mainimg">&nbsp;</div>
       <a href="/post/{{post.small_date}}/{{post.small_name}}" class="title">{{post.title}}</a>
+      <div><a href="javascript:unpublish('{{post.postid}}');">unpublish</a></div>
       <div class="snippet">Posted {{post.nice_date}}<br />{{post.snippet}}</div>
     </div>
-  {% endfor %}
+{% endfor %}
   <script>for(i in toUpdate){ update.apply(undefined, toUpdate[i]); }</script>
   </div>
   
   {% else %}
   <div class='login'>
-  <h3>rm -rf /</h3>
+  <h3>{{maintitle}}</h3>
   <a style='margin:auto;' href="{{url}}" class="btn">Admin Login</a>
   </div>
   {% endif %}

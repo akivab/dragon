@@ -1,4 +1,5 @@
 {% macro edit_mode(post,showPic=False) -%}
+{% autoescape true %}
 <div style='{% if showPic %} margin:auto;max-width:800px;display:block; {% endif %}clear:both'>
 {% if showPic %} <img style='float:left' src='{{post.pic}}'/>{% endif %}
 <form style='float:left; {% if showPic %} margin-left: 30px; {% else %} margin-right: 30px; {% endif %}' action='/edit' method='post'>
@@ -14,9 +15,11 @@
     <input style='margin:auto' type='submit'/>
 </form>
 </div>
+{% endautoescape %}
 {%- endmacro %}
 
 {% macro stylesheet(home=False, jquery=True) -%}
+{% autoescape true %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href='//fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono|Open+Sans|Arvo' rel='stylesheet' type='text/css'>
 {% if not home %}
@@ -29,6 +32,7 @@
 {% if jquery %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 {% endif %}
+{% endautoescape %}
 {%- endmacro %}
 
 {% macro create_header(page='home',
@@ -39,8 +43,10 @@
     is_main_link=False,
     mainimg=None,
     maintitle=None,
-    mainsnippet=None
+    mainsnippet=None,
+    edit_mode=False
     ) -%}
+{% autoescape true %}
 <div class="header">
 {% if page == 'admin' %}
 <a href="/">home</a>
@@ -66,6 +72,15 @@
 </div>
 <div class="content">&nbsp;</div>
 {% if not is_main_link %}
+{% if edit_mode %}
+<form action='/edit_blog' method='post'>
+  <h3>Edit blog information</h3>
+  <input type='text' name='title' placeholder='{{maintitle}}' />
+  <input type='text' name='snippet' placeholder='{{mainsnippet}}' />
+  <input type='text' name='image' placeholder='{{mainimg}}' />
+  <input type='submit' class='btn' style='position:relative;top:-6px;'/>
+</form>
+{% endif %}
 <div class='{% if page=='home' %}home {% endif %}title'>
 {% if page=='post' %}{{post.title}}{% else %}{{maintitle}}{% endif %}
 </div>
@@ -87,6 +102,7 @@ function resize(){
   
 $(window).ready(resize).resize(resize);
 </script>
+{% endautoescape %}
 {%- endmacro %}
 
 {% macro add_footer(no_comments=False,

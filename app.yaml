@@ -1,4 +1,4 @@
-application: rm-rfslash
+application: dragon-blog 
 version: 1
 runtime: python27
 threadsafe: false
@@ -12,6 +12,10 @@ handlers:
 - url: /r
   static_dir: static
 
+- url: /create
+  script: main.app
+  login: required
+
 - url: .*
-  script: main.py
+  script: main.app
 

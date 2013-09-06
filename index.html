@@ -1,0 +1,28 @@
+{% import 'macros.html' as macros %}
+<head>
+  <title>Dragon Blog</title>
+  {{ macros.stylesheet(home=True) }}
+</head>
+<body>
+<div style="padding:30px;">
+<p>
+{% if login %}
+<a href='{{login}}'>Login in</a>
+{% endif %}
+</p>
+
+<p>
+<a href="/create" class='btn' style='left:50%; position:relative; margin-left:-100px; width:200px;'>Create a blog now</a>
+
+{% if blogs %}
+ <h3>My blog</h3>
+ <div>
+ {% for blog in blogs %}
+    <h4><a href="/subdomain?blog={{blog.subdomain}}">{{blog.title}}</a></h4>
+    <span><img style="max-height:100px" src="{{blog.image}}" /></span>
+ {% endfor %}
+ </div>
+{% endif %}
+</p>
+<div>
+</body>
